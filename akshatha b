@@ -1,0 +1,74 @@
+import time
+import tkinter as tk
+from tkinter import messagebox
+
+class MiniStopwatch:
+    def __init__(self):
+        self.start_time = None
+        self.elapsed_time = 0
+        self.running = False
+
+    def start(self):
+        if not self.running:
+            self.start_time = time.time() - self.elapsed_time
+            self.running = True
+            self.update_time()
+            print("Stopwatch started!")
+        else:
+            print("Stopwatch is already running.")
+
+    def stop(self):
+        if self.running:
+            self.elapsed_time = time.time() - self.start_time
+            self.running = False
+            print(f"Stopwatch stopped. Elapsed time: {self.elapsed_time:.2f} seconds.")
+        else:
+            print("Stopwatch is not running.")
+        return self.elapsed_time
+
+    def reset(self):
+        self.start_time = None
+        self.elapsed_time = 0
+        self.running = False
+        print("Stopwatch reset.")
+
+    def get_elapsed_time(self):
+        if self.running:
+            current_time = time.time() - self.start_time
+            return current_time
+        else:
+            return self.elapsed_time
+
+    def update_time(self):
+        if self.running:
+            self.elapsed_time = self.get_elapsed_time()
+            self.time_label.config(text=f"Elapsed Time: {self.elapsed_time:.2f} seconds")
+            self.root.after(1000, self.update_time)  # Update every second
+
+    def create_gui(self):
+        self.root = tk.Tk()
+        self.root.title("Mini Stopwatch")
+
+        self.time_label = tk.Label(self.root, text="Elapsed Time: 0.00 seconds", font=("Helvetica", 16))
+        self.time_label.pack(pady=10)
+
+        start_button = tk.Button(self.root, text="Start", command=self.start)
+        start_button.pack(side=tk.LEFT, padx=5)
+
+        stop_button = tk.Button(self.root, text="Stop", command=self.stop)
+        stop_button.pack(side=tk.LEFT, padx=5)
+
+        reset_button = tk.Button(self.root, text="Reset", command=self.reset)
+        reset_button.pack(side=tk.LEFT, padx=5)
+
+        exit_button = tk.Button(self.root, text="Exit", command=self.root.destroy)
+        exit_button.pack(side=tk.LEFT, padx=5)
+
+        self.root.mainloop()
+
+def stopwatch_menu():
+    stopwatch = MiniStopwatch()
+    stopwatch.create_gui()
+
+if __name__ == "__main__":
+    stopwatch_menu()
